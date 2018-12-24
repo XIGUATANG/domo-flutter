@@ -7,6 +7,8 @@ import 'dart:async';
 
 import './outlinebutton.dart';
 
+import '../http/HttpUtil.dart';
+
 get(String path, Map<String, String> params) async {
   var httpClinet = new HttpClient();
   var uri = new Uri.http('https://api.douban.com', path, params);
@@ -27,12 +29,14 @@ class HotFilmsState extends State<HotFilms> with AutomaticKeepAliveClientMixin {
 
   TextStyle smallfont = TextStyle(color: Color(0xFF666666), fontSize: 12.0);
 
-  Future<String> _getHotFilms() async {
-    var url = 'https://api.douban.com/v2/movie/in_theaters?city=苏州';
-    var httpClient = new HttpClient();
-    var request = await httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    return await response.transform(utf8.decoder).join();
+  Future _dioGetHotFilms() async {
+    var response = await HttpUtil().get('/v2/movie/in_theaters?city=苏州');
+    print(response);
+  }
+
+  Future<Map<String, dynamic>> _getHotFilms() async {
+    return await HttpUtil().get('/v2/movie/in_theaters?city=苏州');
+    // return await response.transform(utf8.decoder).join();
   }
 
   @override
@@ -280,8 +284,8 @@ class HotFilmsState extends State<HotFilms> with AutomaticKeepAliveClientMixin {
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List filmList = [];
-
-    Map jsonData = json.decode(snapshot.data);
+    print('$snapshot');
+    Map jsonData = snapshot.data;
     if (jsonData['subjects'] != null) {
       filmList = jsonData['subjects'];
     }

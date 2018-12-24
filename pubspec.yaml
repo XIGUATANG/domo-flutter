@@ -11,6 +11,8 @@ dependencies:
 
   flutter_statusbar : ^0.0.1
 
+  dio : ^1.0.12
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

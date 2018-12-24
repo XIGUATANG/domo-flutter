@@ -3,14 +3,26 @@ import 'package:flutter/material.dart';
 import './components/hotfilms.dart';
 // import './components/buttery.dart';
 
+import 'package:flutter/services.dart';
+
 import 'dart:io';
 import 'dart:convert';
 
 import './views/detail.dart';
 import './views/demo.dart';
 import './views/demo2.dart';
+import './http/HttpUtil.dart';
 
-void main() => runApp(new MyApp());
+
+void main() {
+  runApp(new MyApp());
+  if (Platform.isAndroid) {
+// 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
+    SystemUiOverlayStyle systemUiOverlayStyle =
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  }
+}
 
 get(String path, Map<String, String> params) async {
   var httpClinet = new HttpClient();
@@ -144,6 +156,10 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
+  var currentPanelIndex = -1;
+
+  List<int> mList = [1, 2, 3, 4, 5];
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -155,39 +171,79 @@ class _MyHomePageState extends State<MyHomePage>
 
     return new Scaffold(
       appBar: new AppBar(
-          flexibleSpace: new DecoratedBox(
-            child: new Row(
-              children: <Widget>[
-                new Expanded(
-                  flex: 1,
-                  child: new Container(),
-                ),
-              ],
-            ),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: Color(0xFFeeeeee), width: 1.0))),
+        flexibleSpace: new DecoratedBox(
+          child: new Row(
+            children: <Widget>[
+              new Expanded(
+                flex: 1,
+                child: new Container(),
+              ),
+            ],
           ),
-          elevation: 0.0,
-          backgroundColor: Color(0xFFFFFFFF),
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: new Text(widget.title),
-          bottom: new TabBar(
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: Color(0xFF333333),
-            indicatorColor: Color(0xFF000000),
-            unselectedLabelColor: Color(0xFF999999),
-            controller: _tabController,
-            tabs: myTabs,
-          )),
-      // body: singature,
-      drawer: new Drawer(
-          child: new Container(
-        child: new DrawerHeader(
-          child: Text('123'),
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: Color(0xFFeeeeee), width: 1.0))),
         ),
-      )),
+        elevation: 0.0,
+        backgroundColor: Color(0xFFFFFFFF),
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new Text(
+              '苏州',
+              style: TextStyle(
+                  fontSize: 16.0, color: Colors.grey[600], height: 0.8),
+            ),
+            new Icon(
+              Icons.keyboard_arrow_down,
+              size: 20.0,
+              color: Colors.grey[600],
+              textDirection: TextDirection.rtl,
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.only(left: 4.0),
+                height: 32.0,
+                decoration: new BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: new BorderRadius.all(Radius.circular(4.0))),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.search,
+                      size: 14.0,
+                      color: Colors.grey[400],
+                    ),
+                    Text(
+                      '电影/电视剧/影人',
+                      style: TextStyle(fontSize: 14.0, color: Colors.grey[400]),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        bottom: PreferredSize(
+            child: new TabBar(
+                labelStyle: TextStyle(fontSize: 16.0),
+                labelPadding: new EdgeInsets.only(bottom: 0.0),
+                // indicatorWeight: 15.0,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorPadding: new EdgeInsets.only(bottom: 1.0),
+                labelColor: Color(0xFF333333),
+                indicatorColor: Color(0xFF000000),
+                unselectedLabelColor: Color(0xFF999999),
+                controller: _tabController,
+                tabs: myTabs),
+            preferredSize: new Size(double.infinity, 40.0)),
+      ),
+      // body: singature,
       body: new TabBarView(
         controller: _tabController,
         children: myTabs.map((Tab tab) {
