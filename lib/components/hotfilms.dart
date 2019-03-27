@@ -31,7 +31,6 @@ class HotFilmsState extends State<HotFilms> with AutomaticKeepAliveClientMixin {
 
   Future _dioGetHotFilms() async {
     var response = await HttpUtil().get('/v2/movie/in_theaters?city=苏州');
-    print(response);
   }
 
   Future<Map<String, dynamic>> _getHotFilms() async {
@@ -131,7 +130,6 @@ class HotFilmsState extends State<HotFilms> with AutomaticKeepAliveClientMixin {
       ));
       return starsList.toList();
     } catch (e) {
-      print(e);
       return [
         new Text(
           '暂无评分',
@@ -168,7 +166,6 @@ class HotFilmsState extends State<HotFilms> with AutomaticKeepAliveClientMixin {
         ],
       );
     } catch (e) {
-      print(e.toString());
       return new Row(
         children: <Widget>[],
       );
@@ -284,7 +281,6 @@ class HotFilmsState extends State<HotFilms> with AutomaticKeepAliveClientMixin {
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List filmList = [];
-    print('$snapshot');
     Map jsonData = snapshot.data;
     if (jsonData['subjects'] != null) {
       filmList = jsonData['subjects'];

@@ -13,7 +13,6 @@ import './views/demo.dart';
 import './views/demo2.dart';
 import './http/HttpUtil.dart';
 
-
 void main() {
   runApp(new MyApp());
   if (Platform.isAndroid) {
@@ -274,6 +273,8 @@ class _MyHomePageState extends State<MyHomePage>
             _currentIndex = index;
             if (index == 1) {
               Navigator.of(context).pushNamed('/demo');
+            } else if (index == 2) {
+              Navigator.of(context).pushNamed('/demo2');
             }
           });
         },

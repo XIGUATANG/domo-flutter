@@ -8,7 +8,7 @@ const double _kMinFlingVelocity = 700.0;
 const double _kMinFlingVelocityDelta = 400.0;
 
 const double _kFlingVelocityScale = 2.0 / 300.0;
-const double _kDismissThreshold = 0.4;
+const double _kDismissThreshold = 0.2;
 
 class Demo2 extends StatefulWidget {
   Demo2({Key key}) : super(key: key);
@@ -158,7 +158,7 @@ class Demo2State extends State<Demo2>
 
   void _updateScaleAnimation() {
     _positionAndScale =
-        new Tween<double>(begin: 0.9, end: 1.0).animate(_moveController);
+        new Tween<double>(begin: 0.9, end: 1.05).animate(_moveController);
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -171,6 +171,7 @@ class Demo2State extends State<Demo2>
     if (oldDragExtent.sign != _dragExtent.sign) {
       setState(() {
         _updateMoveAnimation();
+        _updateScaleAnimation();
       });
     }
     if (!_moveController.isAnimating) {
@@ -210,17 +211,20 @@ class Demo2State extends State<Demo2>
   }
 
   Function _buildAnimationIndex(int index, String text) {
+    print(_positionAndScale.value);
     return (BuildContext context, Widget child) => new Positioned(
         child: new Transform(
           child: _cardBox(text),
           alignment: Alignment.center,
-          transform: new Matrix4.identity()
-            ..scale(_positionAndScale.value * pow(0.9, index)),
+          transform: new Matrix4.diagonal3Values(
+              _positionAndScale.value * pow(0.9, index),
+              _positionAndScale.value * pow(0.9, index),
+              1.0),
         ),
         left: 300.0 - 300 * _positionAndScale.value + (30.0 * index));
   }
 
-  List<String> _demoArr = ['111', '222', '333'];
+  List<String> _demoArr = ['1111', '2222', '3333'];
 
   @override
   Widget build(BuildContext context) {
